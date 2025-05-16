@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Fabulous Birthday Card for Will!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Luckiest+Guy&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Poppins', sans-serif; /* Default font */
+            background-color: #333; /* Darker background to make card pop */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 10px; /* Add some padding for smaller screens */
+            box-sizing: border-box;
+            overflow: hidden; /* Hide scrollbars if confetti goes out of bounds */
+        }
+
+        /* Container for the card, helps with centering and perspective */
+        .card-container {
+            width: 95vw; /* Responsive width */
+            max-width: 400px; /* Max width of the card */
+            height: 600px; /* Fixed height, adjust if needed or make responsive */
+            perspective: 1500px; /* For potential 3D effects (not heavily used now) */
+        }
+
+        /* The card itself */
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            border-radius: 20px; /* More rounded corners for a softer look */
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3); /* Softer, deeper shadow */
+            overflow: hidden; /* Ensures content respects border-radius */
+        }
+
+        /* Common styles for both pages of the card */
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden; /* For 3D effects if implemented */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 25px; /* Increased padding */
+            box-sizing: border-box;
+            border-radius: 20px; /* Match card's border-radius */
+        }
+
+        /* FRONT COVER STYLES */
+        .front-cover {
+            background: linear-gradient(135deg, #ff758c, #ff7043, #ffb74d, #ffee58, #a5d6a7, #4fc3f7, #7e57c2, #ec407a);
+            background-size: 500% 500%; /* Larger size for smoother gradient animation */
+            animation: rainbowBg 18s ease infinite; /* Slightly slower, smoother animation */
+            color: white;
+            z-index: 2; /* Front cover is on top */
+            cursor: pointer; /* Indicate it's clickable */
+        }
+
+        /* Animated rainbow background for the front cover */
+        @keyframes rainbowBg {
+            0%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+            100%{background-position:0% 50%}
+        }
+
+        .front-cover h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: clamp(1.8rem, 5vw, 2.5rem); /* Responsive font size */
+            margin-top: 20px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4); /* Enhanced text shadow */
+            line-height: 1.3;
+        }
+
+        /* Container for the icons on the front cover */
+        .front-icons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px; /* Slightly reduced gap */
+            margin-top: 25px;
+            width: 90%;
+            max-width: 300px; /* Max width for icon grid */
+        }
+
+        .front-icons .icon-item {
+            background-color: rgba(255, 255, 255, 0.25); /* Slightly more opaque */
+            border-radius: 15px; /* More rounded */
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px); /* Stronger blur */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease-out;
+        }
+        .front-icons .icon-item:hover {
+            transform: scale(1.08) rotate(3deg); /* Subtle hover effect */
+        }
+
+        .front-icons svg {
+            width: clamp(40px, 10vw, 55px); /* Responsive SVG size */
+            height: auto;
+            margin-bottom: 8px;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.35));
+        }
+
+        /* Subtle drag queen flair using emoji sparkles */
+        .front-cover::before, .front-cover::after {
+            content: '✨'; /* Sparkle emoji */
+            position: absolute;
+            font-size: clamp(2rem, 6vw, 3rem); /* Responsive emoji size */
+            opacity: 0; /* Start hidden, animate in */
+            animation: popInSparkle 1s ease-out 0.5s forwards, pulseSparkle 2.5s infinite alternate 1.5s;
+        }
+        .front-cover::before {
+            bottom: 15px; left: 15px;
+            transform: rotate(-20deg);
+        }
+        .front-cover::after {
+            content: '💖'; /* Heart sparkle emoji */
+            top: 15px; right: 15px;
+            transform: rotate(20deg);
+            animation-delay: 0.8s, 1.8s; /* Stagger animation for the second sparkle */
+        }
+
+        @keyframes popInSparkle {
+            0% { opacity: 0; transform: scale(0.5) rotate(-20deg); } /* Start smaller and rotated */
+            100% { opacity: 0.8; transform: scale(1) rotate(-20deg); } /* End at final size and opacity */
+        }
+        /* Adjust rotation for the second sparkle if needed in its own keyframe or keep generic */
+        .front-cover::after {
+            /* ... existing styles ... */
+            animation-name: popInSparkleAfter, pulseSparkle; /* Use a specific pop-in for 'after' if rotation differs */
+        }
+        @keyframes popInSparkleAfter { /* Specific for the 'after' element if its rotation is different */
+            0% { opacity: 0; transform: scale(0.5) rotate(20deg); }
+            100% { opacity: 0.8; transform: scale(1) rotate(20deg); }
+        }
+        @keyframes pulseSparkle { /* Pulsing animation for sparkles */
+            0% { opacity: 0.8; transform: scale(1) rotate(var(--rotation-deg, 0deg)); }
+            50% { opacity: 1; transform: scale(1.15) rotate(var(--rotation-deg, 0deg)); }
+            100% { opacity: 0.8; transform: scale(1) rotate(var(--rotation-deg, 0deg)); }
+        }
+
+
+        /* INSIDE PAGE STYLES */
+        .inside-page {
+            background: linear-gradient(to bottom right, #4a00e0, #8e2de2, #c06c84); /* Rich purple/pink gradient */
+            color: white;
+            display: none; /* Initially hidden */
+            opacity: 0; /* Start fully transparent */
+            transition: opacity 0.7s ease-in-out; /* Smooth fade-in */
+            z-index: 1; /* Behind front cover */
+        }
+
+        .inside-page.visible {
+            display: flex; /* Make visible */
+            opacity: 1; /* Fade in */
+        }
+
+        .inside-page h2 {
+            font-family: 'Luckiest Guy', cursive;
+            font-size: clamp(2.2rem, 7vw, 3.5rem); /* Responsive font size */
+            margin-bottom: 25px;
+            position: relative; /* For pseudo-elements or text-shadow effects */
+            opacity: 0; /* Initially hidden, fades in with JS/CSS */
+            transform: translateY(20px); /* Start slightly lower */
+            animation: fadeInText 1s cubic-bezier(0.215, 0.610, 0.355, 1) 2.5s forwards; /* Delay for confetti, smoother ease */
+            /* Sparkle effect using text-shadow */
+            text-shadow: 0 0 4px #fff, 0 0 8px #fff, 0 0 12px #f0f, 0 0 16px #f0f, 0 0 20px #f0f;
+        }
+
+        .inside-page p {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem); /* Responsive font size */
+            line-height: 1.7; /* Increased line height for readability */
+            width: 85%;
+            max-width: 320px; /* Max width for paragraph */
+            margin: 0 auto;
+            opacity: 0; /* Initially hidden */
+            transform: translateY(20px); /* Start slightly lower */
+            animation: fadeInText 1s cubic-bezier(0.215, 0.610, 0.355, 1) 3s forwards; /* Delay for paragraph */
+        }
+
+        /* Keyframes for text fade-in and slide-up effect */
+        @keyframes fadeInText {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* CONFETTI STYLES */
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Crucial for keeping confetti within card bounds */
+            pointer-events: none; /* Allows interaction with elements underneath */
+            z-index: 5; /* Above inside page content, but below any modals if added */
+        }
+
+        .confetti-piece {
+            position: absolute;
+            opacity: 1; /* Start fully visible */
+            /* background-color will be set by JS */
+        }
+
+        /* Click to open message on front cover */
+        .click-to-open {
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            margin-top: auto; /* Push to bottom */
+            padding: 8px 12px;
+            background-color: rgba(0,0,0,0.25);
+            border-radius: 8px;
+            animation: pulseHint 2s infinite ease-in-out 1s; /* Subtle pulse to draw attention */
+        }
+        @keyframes pulseHint {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="card-container">
+        <div class="card" id="birthdayCard">
+            <div class="page front-cover" id="frontCover">
+                <div class="front-icons">
+                    <div class="icon-item">
+                        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="8" y="12" width="48" height="40" rx="4" ry="4" fill="#2962FF" stroke="#1A237E" stroke-width="1.5" />
+                            <circle cx="32" cy="32" r="8" fill="none" stroke="#FFD700" stroke-width="2" />
+                            <path d="M28 32h8 M32 28v8" stroke="#FFD700" stroke-width="1.5" />
+                        </svg>
+                    </div>
+                    <div class="icon-item">
+                        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="10,55 54,55 48,20 16,20" fill="#8D6E63" stroke="#4E342E" stroke-width="1.5"/>
+                            <rect x="11" y="40" width="42" height="10" fill="#D7CCC8" stroke="#4E342E" stroke-width="1"/>
+                            <rect x="12" y="30" width="40" height="10" fill="#A1887F" stroke="#4E342E" stroke-width="1"/>
+                            <rect x="13" y="20" width="38" height="10" fill="#F5E0C3" stroke="#4E342E" stroke-width="1"/>
+                            <circle cx="22" cy="25" r="1.5" fill="#4E342E"/> <circle cx="28" cy="24" r="1" fill="#4E342E"/>
+                            <circle cx="34" cy="25" r="1.5" fill="#4E342E"/> <circle cx="40" cy="24" r="1" fill="#4E342E"/>
+                        </svg>
+                    </div>
+                    <div class="icon-item">
+                        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="32" cy="35" r="18" fill="#FFEB3B" stroke="#FBC02D" stroke-width="1.5"/>
+                            <path d="M28 50 Q32 56 36 50" fill="#FFA000" stroke="#E65100" stroke-width="1"/>
+                            <ellipse cx="25" cy="32" rx="7" ry="5" fill="#212121" stroke="black" stroke-width="0.5"/>
+                            <ellipse cx="39" cy="32" rx="7" ry="5" fill="#212121" stroke="black" stroke-width="0.5"/>
+                            <line x1="31" y1="32" x2="33" y2="32" stroke="#424242" stroke-width="2"/>
+                            <path d="M18 30 Q15 25 20 22" stroke="black" stroke-width="1.5" fill="none" />
+                            <path d="M46 30 Q49 25 44 22" stroke="black" stroke-width="1.5" fill="none" />
+                            <path d="M28 19 Q32 12 36 19 Q40 12 44 19" fill="#D32F2F" stroke="#B71C1C" stroke-width="1"/>
+                        </svg>
+                    </div>
+                    <div class="icon-item">
+                        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="22" y="10" width="20" height="32" rx="10" ry="10" fill="#B0BEC5" stroke="#546E7A" stroke-width="1.5"/>
+                            <rect x="24" y="12" width="16" height="28" rx="8" ry="8" fill="#78909C"/>
+                            <line x1="26" y1="16" x2="38" y2="16" stroke="#CFD8DC" stroke-width="1"/> <line x1="26" y1="20" x2="38" y2="20" stroke="#CFD8DC" stroke-width="1"/>
+                            <line x1="26" y1="24" x2="38" y2="24" stroke="#CFD8DC" stroke-width="1"/> <line x1="26" y1="28" x2="38" y2="28" stroke="#CFD8DC" stroke-width="1"/>
+                            <line x1="26" y1="32" x2="38" y2="32" stroke="#CFD8DC" stroke-width="1"/>
+                            <rect x="29" y="42" width="6" height="8" fill="#546E7A"/>
+                            <path d="M24 50 H40 L36 56 H28 Z" fill="#455A64" stroke="#263238" stroke-width="1"/>
+                        </svg>
+                    </div>
+                </div>
+                <h1>It’s time to turn up the glam…</h1>
+                <div class="click-to-open">(Click to Open)</div>
+            </div>
+
+            <div class="page inside-page" id="insidePage">
+                <div class="confetti-container" id="confettiContainer"></div>
+                <h2>Happy Birthday, Will!</h2>
+                <p>May your year be full of fierce desserts, first-class flights, fabulous chickens, and show-stopping songs.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get references to the card elements
+        const frontCover = document.getElementById('frontCover');
+        const insidePage = document.getElementById('insidePage');
+        const confettiContainer = document.getElementById('confettiContainer');
+        const card = document.getElementById('birthdayCard'); // For potential future 3D flip
+
+        // Event listener for clicking the front cover
+        frontCover.addEventListener('click', () => {
+            // Option 1: Simple hide/show
+            frontCover.style.display = 'none'; // Hide front cover immediately
+            insidePage.classList.add('visible'); // Show inside page (triggers CSS opacity transition)
+            
+            // Option 2: 3D Flip (more complex, ensure card perspective and transform-style are set)
+            // card.style.transform = 'rotateY(180deg)';
+            // setTimeout(() => { // Ensure inside page is ready for confetti after flip
+            //    insidePage.classList.add('visible'); // This might not be needed if flip handles visibility
+            //    launchConfetti();
+            // }, 300); // Half of flip duration
+
+            launchConfetti(); // Launch confetti explosion
+        });
+
+        // Function to create and animate confetti
+        function launchConfetti() {
+            const numConfetti = 200; // Number of confetti pieces for a dramatic effect
+            const colors = ['#ff3860', '#ffdd57', '#48c774', '#3273dc', '#8A2BE2', '#FF69B4', '#00FF7F', '#FFD700', '#FFFFFF']; // Vibrant and glittery colors
+
+            confettiContainer.innerHTML = ''; // Clear any previous confetti
+
+            for (let i = 0; i < numConfetti; i++) {
+                const confettiPiece = document.createElement('div');
+                confettiPiece.classList.add('confetti-piece');
+
+                // Randomize properties for each confetti piece
+                const xStart = Math.random() * 100; // Starting X position (%)
+                const yStart = Math.random() * 30 + 40; // Starting Y position (clustered towards center initially)
+                
+                const fallDuration = Math.random() * 2.5 + 2; // Duration of fall (2 to 4.5 seconds)
+                const rotationStart = Math.random() * 360; // Initial rotation
+                const rotationEnd = rotationStart + (Math.random() * 720 - 360); // End rotation
+                
+                // Horizontal and vertical spread
+                const swayX = (Math.random() - 0.5) * 2 * (window.innerWidth * 0.6); // Spread out horizontally
+                const fallY = window.innerHeight * 1.2; // Fall well below the card
+
+                const size = Math.random() * 10 + 5; // Size of confetti (5px to 15px)
+                const isGlitter = Math.random() > 0.3; // 70% chance of being glittery
+
+                if (isGlitter) {
+                    const angle = Math.random() * 360;
+                    const color1 = colors[Math.floor(Math.random() * colors.length)];
+                    let color2 = colors[Math.floor(Math.random() * colors.length)];
+                    while (color2 === color1) {
+                        color2 = colors[Math.floor(Math.random() * colors.length)];
+                    }
+                    confettiPiece.style.background = `linear-gradient(${angle}deg, ${color1}, ${color2}, gold, silver)`;
+                    confettiPiece.style.borderRadius = `${Math.random() * 2}px`; // Sharper edges for glitter
+                } else {
+                    confettiPiece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confettiPiece.style.borderRadius = '50%'; // Rounder for regular confetti
+                }
+                
+                confettiPiece.style.width = `${size}px`;
+                confettiPiece.style.height = `${size * (Math.random() * 0.4 + 0.8)}px`; // Vary aspect ratio
+
+                confettiPiece.style.left = `${xStart}%`;
+                confettiPiece.style.top = `${yStart}%`;
+                confettiPiece.style.transform = `rotate(${rotationStart}deg)`;
+
+                confettiContainer.appendChild(confettiPiece);
+
+                // Animate using Web Animations API for better performance
+                confettiPiece.animate([
+                    { transform: `translate(0px, 0px) rotate(${rotationStart}deg)`, opacity: 1 },
+                    { transform: `translate(${swayX}px, ${fallY}px) rotate(${rotationEnd}deg)`, opacity: 0 }
+                ], {
+                    duration: fallDuration * 1000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)', // Ease out, mimics gravity
+                    fill: 'forwards' // Keep final state
+                });
+            }
+
+            // Optional: Clean up confetti elements from DOM after animation
+            // This can be done by removing them after the longest animation duration
+            // setTimeout(() => { confettiContainer.innerHTML = ''; }, (2.5 + 2) * 1000 + 500); // Max duration + buffer
+        }
+
+        // Set CSS variables for sparkle animations
+        const frontCoverElement = document.querySelector('.front-cover');
+        if (frontCoverElement) {
+            const beforeSparkle = frontCoverElement.style.getPropertyValue('--rotation-deg') || '-20deg';
+            const afterSparkle = frontCoverElement.style.getPropertyValue('--rotation-deg') || '20deg';
+            
+            // This is a bit of a hack to set different rotations for the pulse animation
+            // A better way would be to have separate animation names or use JS to control pulse
+            // For simplicity, the pulse animation uses a generic var or fixed degree.
+            // The popInSparkle already handles initial rotation.
+        }
+
+    </script>
+</body>
+</html>
+
